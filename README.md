@@ -103,3 +103,26 @@ Fourier Calendar Terms represent seasonality using smooth sinusoidal functions (
 - Monthly Seasonality: Sales across months.
 
 Fourier terms approximate patterns as smooth waves because sine and cosine functions are continuous. They do not model sharp or abrupt changes.
+
+# Algorithm Complexity Note
+
+Lets take a moment to analyse the complexity of our models. 
+
+## Linear Regression
+
+
+## XGBoost
+
+XGBoost's time complexity is given by:
+
+$$
+\text{complexity} = O(K \cdot d \cdot T \cdot n)
+$$
+
+Where :
+- **K**: Number of estimators/trees
+- **d**: Maximum depth per tree
+- **T**: Number of non-zero rows
+- **n**: Total number of train rows
+
+For each node, for each feature, the algorithm finds the optimal split point by finding maximum gain. This does this for all n train rows. It may use some sorting feature in order to speed up the process. This is applied for K trees each with depth 5.
