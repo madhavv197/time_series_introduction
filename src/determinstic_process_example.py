@@ -44,10 +44,11 @@ dp = DeterministicProcess(
     index=dates,
     constant=True,
     order=1,
-    seasonal=True,
-    additional_terms=[CalendarFourier(freq="YE", order=4)],
+    seasonal=True
 )
 X_deterministic = dp.in_sample()
+
+print(X_deterministic)
 model_deterministic = LinearRegression()
 model_deterministic.fit(X_deterministic, sales)
 
