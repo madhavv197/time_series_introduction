@@ -3,6 +3,35 @@
 
 Always time index your data! Without time indexing the model has no idea how different features relate. You essentially just pass 1 large input vector  (time seres) into your data. Ensure that before you even start looking at model architectures, your data is time indexed.
 
+## MultiIndexing in Pandas
+
+You can use pandas to time index your data with the method of multiindexing. In proper termss, this takes your input data from a "long" format to a "wide one". This step is crucial in any part of time series. Below is an exmaple. 
+
+### Before Time Indexing
+
+Here we have an example of before time indexing our data. In this even though it looks like we have "features" Store ID and product family, this isnt the case! These "features" get completely ignored in the model! All we pass in as data is one long time series of sales. Essentially just one vector for our model to learn from.
+
+| Date       | Store ID | Product Family | Sales |
+|------------|----------|----------------|-------|
+| 2017-01-01 | 1        | Frozen Pizza   | 50.0  |
+| 2017-01-01 | 1        | Bicycles       | 5.0   |
+| 2017-01-01 | 2        | Frozen Pizza   | 30.0  |
+| 2017-01-01 | 2        | Bicycles       | 8.0   |
+| 2017-01-02 | 1        | Frozen Pizza   | 52.0  |
+| 2017-01-02 | 1        | Bicycles       | 6.0   |
+| 2017-01-02 | 2        | Frozen Pizza   | 29.0  |
+| 2017-01-02 | 2        | Bicycles       | 7.0   |
+
+### After Time Indexing
+
+This is the wide format. We time index our data, and now pass in 1782 vectors ($54 \text{ product families} * 33 \text{ store numbers}$)!
+
+| Date       | Frozen Pizza (Store 1) | Bicycles (Store 1) | Frozen Pizza (Store 2) | Bicycles (Store 2) |
+|------------|-------------------------|--------------------|-------------------------|--------------------|
+| 2017-01-01 | 50.0                   | 5.0                | 30.0                   | 8.0                |
+| 2017-01-02 | 52.0                   | 6.0                | 29.0                   | 7.0                |
+
+
 # Adding Temporal Dependencies using Deterministic Processes
 
 ### Linear Regression
