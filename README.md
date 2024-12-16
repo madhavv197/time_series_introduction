@@ -31,6 +31,28 @@ This is the wide format. We time index our data, and now pass in 1782 vectors ($
 | 2017-01-01 | 50.0                   | 5.0                | 30.0                   | 8.0                |
 | 2017-01-02 | 52.0                   | 6.0                | 29.0                   | 7.0                |
 
+# Model Architectures (1)
+
+## Linear Regression
+
+Linear regression models the relationship between dependent variable ($y$) and one or more independent variables ($x_1, x_2, x_3, ... , x_n$). The goal of linear regression is to find a line that best fits the data by minimizing the error between predicted values and the actual values. The equation is presented below:
+
+$$
+y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + ... + \epsilon
+$$
+
+Where:
+
+- $y$ is the dependent variable (target)
+- $x$ is the independent variable (predictor)
+- $\beta_0$ Intercept of the line
+- $\beta_n$ Slope for each corresponding predictor $x_n$
+- $\epsilon$ Error term
+
+We make certain assumptions about the data when implementing a linear regression model:
+
+- Linearity: The relationship between y and x is linear. (Note: we can still model non linear relationships between x and y! When we say that we assume linearity, we model the way x and y combine to be linear, not necessarily that the relationship between x and y is linear!)
+
 
 # Adding Temporal Dependencies using Deterministic Processes
 
