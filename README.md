@@ -52,6 +52,12 @@ Where:
 We make certain assumptions about the data when implementing a linear regression model:
 
 - Linearity: The relationship between y and x is linear. (Note: we can still model non linear relationships between x and y! When we say that we assume linearity, we model the way x and y combine to be linear, not necessarily that the relationship between x and y is linear!)
+- Independence: The residuals ($Y_i - \hat{Y}_i$) show be independent of each other. In other words, the error of one observation should not depend on the error of another observation. In time series, errors may often show autocorrelation, where residuals depend on previous time points! We can check this by using the Durbin-Watson test, a statistical terst used to detect autocorrelation in residuals.
+- Homoscedasticity: The variance of residuals should be constant across all levels of the independent variables. We can detect heteroedasticity (unequal variance) by plotting residuals vs predicted values. We may also use statistical tests like the Breusch-Pagan test or White's test. 
+- Normality - Residuals hsoul dbe approximately normally idstriubted. This ensures that coefficient estimates are unbiased and confidence intervals and p-values are reliable. We can check this by plotting a histogram or performing the Shapiro-Wilk test or Kolmogorov-Smirnov test.
+- No Multicollinearity: Independent variables ($X_1, X_2, ... , X_n) should not be highly correlated with each other. When 2 or more independent variables are highly correlated, they carry redundant information, which makes it hard to determine their individual effect on the target variable $Y$. We can detect multicollinearity by calculating a ocrrelation matrix or calculating the variance inflation factor.
+
+
 
 
 # Adding Temporal Dependencies using Deterministic Processes
