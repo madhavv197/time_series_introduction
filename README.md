@@ -98,6 +98,17 @@ $$
 
 This equation provides the optimal coefficients $\beta$, which minimize the squared error. This relationship is very important. In MSE, we will never have to iteratively optimize for a solution!
 
+### Regularization
+
+We may address overfitting and multicollinearity in our linear regression model by using Ridge (L2) or Lasso (L1) Regularization. How it works is by adding penalties at the end of our loss function:
+
+$$
+Loss = MSE + Penalty = \frac{1}{n} \sum_{i=1}^{n} {(Y_i - \hat{Y}_i)^2} + \lambda \sum
+$$
+
+## Tree Architectures
+
+### 
 
 
 # Adding Temporal Dependencies using Deterministic Processes
