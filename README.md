@@ -57,6 +57,46 @@ We make certain assumptions about the data when implementing a linear regression
 - Normality - Residuals hsoul dbe approximately normally idstriubted. This ensures that coefficient estimates are unbiased and confidence intervals and p-values are reliable. We can check this by plotting a histogram or performing the Shapiro-Wilk test or Kolmogorov-Smirnov test.
 - No Multicollinearity: Independent variables ($X_1, X_2, ... , X_n) should not be highly correlated with each other. When 2 or more independent variables are highly correlated, they carry redundant information, which makes it hard to determine their individual effect on the target variable $Y$. We can detect multicollinearity by calculating a ocrrelation matrix or calculating the variance inflation factor.
 
+The most commonly used loss function for Linear Regression is the Mean Squared Error (MSE), which is defined as:
+
+$$
+MSE = \frac{1}{n} \sum_{i=1}^{n} (Y_i - \hat{Y}_i)^2
+$$
+
+where:
+- $Y_i$ is the actual value,
+- $\hat{Y}_i$ is the predicted value.
+
+To minimize the MSE, we solve for the optimal coefficients $\beta$ using Ordinary Least Squares (OLS). The predicted values are given by:
+
+$$
+\hat{Y} = X\beta 
+$$
+
+where:
+- $X$ is the design matrix (input features),
+- $\beta$ is the vector of coefficients,
+- $\hat{Y}$ is the vector of predictions.
+
+The goal is to minimize the Residual Sum of Squares (RSS):
+
+$$
+RSS = (Y - X\beta)^T (Y - X\beta)
+$$
+
+Taking the derivative of RSS with respect to $\beta$ and setting it to zero gives:
+
+$$
+\frac{\partial RSS}{\partial \beta} = -2X^T (Y - X\beta) = 0 
+$$
+
+Solving for $\beta$, we obtain the normal equation:
+
+$$ 
+\beta = (X^T X)^{-1} X^T Y 
+$$
+
+This equation provides the optimal coefficients $\beta$, which minimize the squared error. This relationship is very important. In MSE, we will never have to iteratively optimize for a solution!
 
 
 
