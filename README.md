@@ -153,11 +153,66 @@ $$
 \end{bmatrix}
 $$
 
-F
+To calculate $(X^TX)$ if the input design matrix $X$ is an $nxp$ matrix, with n observations and p features, our output gram matrix will have shape $pxp$. To calculate the value of our gram matrix at some position $jk$, we follow the formula and do some linear algebra operations:
 
+$$
+X = 
+\begin{bmatrix}
+X_{11} & X_{12} & \dots & X_{1p} \\
+X_{21} & X_{22} & \dots & X_{2p} \\
+\vdots & \vdots & \ddots & \vdots \\
+X_{n1} & X_{n2} & \dots & X_{np}
+\end{bmatrix}
+$$
 
+$$
+X^T = 
+\begin{bmatrix}
+X_{11} & X_{21} & \dots & X_{n1} \\
+X_{12} & X_{22} & \dots & X_{n2} \\
+\vdots & \vdots & \ddots & \vdots \\
+X_{1p} & X_{2p} & \dots & X_{np}
+\end{bmatrix}
+$$
 
+For two matrices A and B, the element at position ($j, k$) in their multiplication is:
 
+$$
+(AB)_{jk} = \sum\_{\text{over common index}} \text{Row}_j (A) \cdot \text{Col}_k (B)
+$$
+
+To compute $(X^TX)_{jk}$, we take the dot product of j-th row of $X^T$ and the k-th column of $X$. Our result:
+
+$$
+(X^TX)_{jk} = \sum\_{i=1}^n X\_{ij}X\_{ik}
+$$
+
+Lets consider an example to make this more clear visually. Consider design matrix $X#:
+
+$$
+X = 
+\begin{bmatrix}
+1 & 2 \\
+3 & 4 \\
+5 & 6 \\
+\end{bmatrix}
+$$
+
+$$
+X^T = 
+\begin{bmatrix}
+1 & 3 & 5 \\
+2 & 4 & 6
+\end{bmatrix}
+$$
+
+$$
+X^TX= 
+\begin{bmatrix}
+(1)(1) + (3)(3) + (5)(5) & (1)(2) + (3)(4) + (5)(6) \\
+(2)(1) + (4)(3) + (6)(5) & (2)(2) + (2)(4) + (6)(6)
+\end{bmatrix}
+$$
 
 
 #### Lasso (L1)
