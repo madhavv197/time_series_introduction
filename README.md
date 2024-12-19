@@ -258,11 +258,36 @@ $$
 Cov(X_j, X_k) = \frac{1}{n}(X^TX)_{jk}
 $$
 
+Note also the properties of our gram matrix, and the determinant being very close to 0. If we have matrix:
+
+$$
+\begin{bmatrix}
+Var(X_1) & Cov(X_1,X_2) \\
+Cov(X_2,X_1) & Var(X_2)
+\end{bmatrix}
+$$
+
+We get the determinant is close to 0 with the following relationship:
+
+$$
+Cov(X_1,X_2) \approx \sqrt{Var(X_1)*Var(X_2)}
+$$
+$$
+Det(X^TX) = Var(X_1)*Var(X_2)-Cov(X_1,X_2)Cov(X_2,X_1) 
+$$
+
+We can say that a matrix is ill-conditioned, or nearly singular when the ratio of largest to smallest eigen value is greater than $1\cdot10^6$:
+
+$$
+\kappa(X^TX) = \frac{\sigma_{max}}{\sigma_{min}}
+$$
+
+Kappa is known as the condition number.
 ##### Connecting Back
 
 After all this linear algebra, what does this have to do with L2 regularization? How does this help multicollinearity and overfitting?
 
-Multicollinearity occours when two or more predictors are highly correlated. This means that their covariances will be large. In other words, the off-diagonal elements of our matrix will be very large in comparison to the diagonal elements (its variances). This causes the inverse of $(X^TX)^{-1}$ to be nearly singular (ill-conditioned). In other words as the determinant is so 
+Multicollinearity occours when two or more predictors are highly correlated. This means that their covariances will be large. In other words, the off-diagonal elements of our matrix will be very large in comparison to the diagonal elements (its variances). This causes the inverse of $(X^TX)^{-1}$ to be nearly singular (ill-conditioned). In other words the determinant is very close to 0.
 
 #### Lasso (L1)
 
