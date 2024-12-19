@@ -55,7 +55,7 @@ We make certain assumptions about the data when implementing a linear regression
 - Independence: The residuals ($Y_i - \hat{Y}_i$) show be independent of each other. In other words, the error of one observation should not depend on the error of another observation. In time series, errors may often show autocorrelation, where residuals depend on previous time points! We can check this by using the Durbin-Watson test, a statistical terst used to detect autocorrelation in residuals.
 - Homoscedasticity: The variance of residuals should be constant across all levels of the independent variables. We can detect heteroedasticity (unequal variance) by plotting residuals vs predicted values. We may also use statistical tests like the Breusch-Pagan test or White's test. 
 - Normality - Residuals hsoul dbe approximately normally idstriubted. This ensures that coefficient estimates are unbiased and confidence intervals and p-values are reliable. We can check this by plotting a histogram or performing the Shapiro-Wilk test or Kolmogorov-Smirnov test.
-- No Multicollinearity: Independent variables ($X_1, X_2, ... , X_n) should not be highly correlated with each other. When 2 or more independent variables are highly correlated, they carry redundant information, which makes it hard to determine their individual effect on the target variable $Y$. We can detect multicollinearity by calculating a ocrrelation matrix or calculating the variance inflation factor.
+- No Multicollinearity: Independent variables ($X_1, X_2, ... , X_n$) should not be highly correlated with each other. When 2 or more independent variables are highly correlated, they carry redundant information, which makes it hard to determine their individual effect on the target variable $Y$. We can detect multicollinearity by calculating a ocrrelation matrix or calculating the variance inflation factor.
 
 The most commonly used loss function for Linear Regression is the Mean Squared Error (MSE), which is defined as:
 
@@ -102,13 +102,15 @@ This equation provides the optimal coefficients $\beta$, which minimize the squa
 
 #### Ridge (L2)
 
-We can avoid overfitting and multicollinearity in our linear regression model by using Ridge (L2) or Lasso (L1) Regularization. How it works is by adding penalties at the end of our loss function:
+We can avoid overfitting and multicollinearity in our linear regression model by using Ridge (L2). How it works is by adding penalties at the end of our loss function:
 
 $$
 Loss = MSE + Penalty = \frac{1}{n} \sum_{i=1}^{n} {(Y_i - \hat{Y}_i)^2} + \lambda \sum \beta^2
 $$
 
-Lets dive deeper into how the linear algebra here. From our equation of OLS:
+##### Intermezzo : Linear Algebra 
+
+Lets take a step back to dive deeper into how the linear algebra here. From our equation of OLS:
 
 $$ 
 \beta = (X^T X)^{-1} X^T Y 
@@ -187,7 +189,7 @@ $$
 (X^TX)_{jk} = \sum\_{i=1}^n X\_{ij}X\_{ik}
 $$
 
-Lets consider an example to make this more clear visually. Consider design matrix $X#:
+Lets consider an example to make this more clear visually. Consider design matrix $X$:
 
 $$
 X = 
@@ -211,11 +213,56 @@ X^TX=
 \begin{bmatrix}
 (1)(1) + (3)(3) + (5)(5) & (1)(2) + (3)(4) + (5)(6) \\
 (2)(1) + (4)(3) + (6)(5) & (2)(2) + (2)(4) + (6)(6)
+\end{bmatrix} =  
+\begin{bmatrix}
+35 & 44 \\
+44 & 56
 \end{bmatrix}
 $$
 
+The variance measures the spread or variability of a single feature:
 
+$$
+Var(X_j) = \frac{1}{n} \sum_{i=1}^n (X_{ij} - \bar{X}_j)^2
+$$
 
+where:
+- $X_{ij}$ value of the j-th feature for observation i
+- $\bar{X}_j$ mean of the j-th feature
+
+The covariance measures the relationship between two features $X_j$ and $X_k$:
+
+$$
+Cov(X_j, X_k) = \frac{1}{n} \sum_{i=1}^n (X_{ij} - \bar{X}_j)(X\_{ik}-\bar{X_k})
+$$
+
+We assume that the features are mean centered, from our equation for $(X^TX)_{jk}$, we find that for diagonal elements:
+
+$$
+(X^TX)_{jj} = \sum\_{i=1}^n X\_{ij}^2
+$$
+
+Which is proportional to our variance formula if we were mean centered! For off-diagonal elements $(j \neq k)$:
+
+$$
+(X^TX)_{jk} = \sum\_{i=1}^n X\_{ij}X\_{ik}
+$$
+
+Which is also proportional to our covariance formula! We have that:
+
+$$
+Var(X_j) = \frac{1}{n}(X^TX)_{jj}
+$$
+
+$$
+Cov(X_j, X_k) = \frac{1}{n}(X^TX)_{jk}
+$$
+
+##### Connecting Back
+
+After all this linear algebra, what does this have to do with L2 regularization? How does this help multicollinearity and overfitting?
+
+Multicollinearity occours when two or more predictors are highly correlated. This means that their covariances will be large. In other words, the off-diagonal elements of our matrix will be very large in comparison to the diagonal elements (its variances). This causes the inverse of $(X^TX)^{-1}$ to be nearly singular (ill-conditioned). In other words as the determinant is so 
 
 #### Lasso (L1)
 
