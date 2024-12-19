@@ -1,4 +1,28 @@
+# Introduction To Time Series: A comprehensive guide to time series in machine learning
 ![Banner](assets/banner_time_series.png)
+
+# Table of Contents
+
+- [Fundamental Step: Time Indexing](#fundamental-step-time-indexing)
+  - [MultiIndexing in Pandas](#multiindexing-in-pandas)
+    - [Before Time Indexing](#before-time-indexing)
+    - [After Time Indexing](#after-time-indexing)
+- [Model Architectures (1)](#model-architectures-1)
+  - [Linear Regression](#linear-regression)
+    - [Regularization](#regularization)
+      - [Ridge (L2)](#ridge-l2)
+      - [Lasso (L1)](#lasso-l1)
+- [Adding Temporal Dependencies using Deterministic Processes](#adding-temporal-dependencies-using-deterministic-processes)
+  - [Linear Regression](#linear-regression-1)
+  - [Decision Trees](#decision-trees)
+  - [Deterministic Processes](#deterministic-processes)
+    - [Introducing Seasonality](#introducing-seasonality)
+      - [One Hot Encoding](#one-hot-encoding)
+      - [Fourier Calendar Terms](#fourier-calendar-terms)
+- [Algorithm Complexity Note](#algorithm-complexity-note)
+  - [Linear Regression](#linear-regression-2)
+  - [XGBoost](#xgboost)
+
 # Fundamental Step: Time Indexing
 
 Always time index your data! Without time indexing the model has no idea how different features relate. You essentially just pass 1 large input vector  (time seres) into your data. Ensure that before you even start looking at model architectures, your data is time indexed.
@@ -276,18 +300,33 @@ $$
 Det(X^TX) = Var(X_1)*Var(X_2)-Cov(X_1,X_2)Cov(X_2,X_1) 
 $$
 
-We can say that a matrix is ill-conditioned, or nearly singular when the ratio of largest to smallest eigen value is greater than $1\cdot10^6$:
+We can say that a matrix is ill-conditioned, or nearly singular, when the ratio of largest to smallest eigen value is greater than $1\cdot10^6$:
 
 $$
 \kappa(X^TX) = \frac{\sigma_{max}}{\sigma_{min}}
 $$
 
 Kappa is known as the condition number.
+
 ##### Connecting Back
 
 After all this linear algebra, what does this have to do with L2 regularization? How does this help multicollinearity and overfitting?
 
-Multicollinearity occours when two or more predictors are highly correlated. This means that their covariances will be large. In other words, the off-diagonal elements of our matrix will be very large in comparison to the diagonal elements (its variances). This causes the inverse of $(X^TX)^{-1}$ to be nearly singular (ill-conditioned). In other words the determinant is very close to 0.
+Multicollinearity occours when two or more predictors are highly correlated. Consider the case where one predictor is perfectly correlated to another predictor ($X_1 = 2X_2$), in this case we get an eigenvalue of 0, which means that our gram matrix is singular. If predictors are highly correlated, then we get eigenvalues very close to 0, resulting in high conditioning numbers, which results in a model that is very sensitive to noise in the train set.
+
+In ridge regression we add a penalty term lambda, in this case our equation for OLS results to:
+
+$$ 
+\beta = (X^T X + \lambda I)^{-1} X^T Y 
+$$
+
+This results in our eigenvalues being increased by lambda:
+
+$$
+\sigma_{j}^\text{ridge} = \sigma_j + \lambda
+$$
+
+This stablizes our inversion, helping with predictors being highly correlated. As we also penalise large $\beta$ coefficients, we avoid specific predictors being highly used, helping with overfitting!
 
 #### Lasso (L1)
 
