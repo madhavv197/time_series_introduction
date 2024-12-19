@@ -100,11 +100,69 @@ This equation provides the optimal coefficients $\beta$, which minimize the squa
 
 ### Regularization
 
-We may address overfitting and multicollinearity in our linear regression model by using Ridge (L2) or Lasso (L1) Regularization. How it works is by adding penalties at the end of our loss function:
+#### Ridge (L2)
+
+We can avoid overfitting and multicollinearity in our linear regression model by using Ridge (L2) or Lasso (L1) Regularization. How it works is by adding penalties at the end of our loss function:
 
 $$
-Loss = MSE + Penalty = \frac{1}{n} \sum_{i=1}^{n} {(Y_i - \hat{Y}_i)^2} + \lambda \sum
+Loss = MSE + Penalty = \frac{1}{n} \sum_{i=1}^{n} {(Y_i - \hat{Y}_i)^2} + \lambda \sum \beta^2
 $$
+
+Lets dive deeper into how the linear algebra here. From our equation of OLS:
+
+$$ 
+\beta = (X^T X)^{-1} X^T Y 
+$$
+
+Where $X$ is the design matrix, containing all the predictor variables:
+
+$$
+\begin{bmatrix}
+X_{11} & X_{12} & \dots & X_{1p} \\
+X_{21} & X_{22} & \dots & X_{2p} \\
+\vdots & \vdots & \ddots & \vdots \\
+X_{n1} & X_{n2} & \dots & X_{np}
+\end{bmatrix}
+$$
+
+where:
+- each row corresponds to a single data point ($i = 1,2,...,n$),
+- each column corresponds to a feature or predictor ($j = 1,2,...,n$)
+- $X_{ij}$ represents the value of the j-th predictor for the i-th observation.
+
+Let's consider an example to make this more concrete. Consider a house price prediction problem:
+- Row i: represents a specific house,
+- Column j: represents a specific feature of the house, size, number of rooms or age.
+
+$$
+\begin{bmatrix}
+Size & No. of Rooms & Age \\
+1200 & 3 & 10 \\
+2000 & 5 & 20
+\end{bmatrix}
+$$
+
+This is our input matrix. We then have to calculate $X^TX$:
+
+$$
+\begin{bmatrix}
+(X^TX)\_{11} & (X^TX)\_{12} & \dots & (X^TX)\_{1p} \\
+(X^TX)\_{21} & (X^TX)\_{22} & \dots & (X^TX)\_{2p} \\
+\vdots & \vdots & \ddots & \vdots \\
+(X^TX)\_{n1} & (X^TX)\_{n2} & \dots & (X^TX)\_{np}
+\end{bmatrix}
+$$
+
+F
+
+
+
+
+
+
+#### Lasso (L1)
+
+
 
 ## Tree Architectures
 
