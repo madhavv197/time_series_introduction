@@ -330,7 +330,42 @@ This stablizes our inversion, helping with predictors being highly correlated. A
 
 #### Lasso (L1)
 
+With lasso regularization, we have the advantes of automatic feature selection, multicollinearity handling and improved interpretability. The equation is as follows:
 
+$$
+Loss = MSE + Penalty = \frac{1}{n} \sum_{i=1}^{n} {(Y_i - \hat{Y}_i)^2} + \lambda \sum\_{j=1}^{n} |\beta_j|
+$$
+
+Moving away from matrix notation for lasso, lets go back to our formulation for linear regression. We aim to model the relationship between independent variables (features) and the dependent variable (target) as:
+
+$$
+y_i = \sum_{j=1}^p X_{ij}\beta_j + \epsilon_i
+$$
+
+Where:
+
+- $y_i$ is the actual value of the dependent variable for the i-th observation.
+- $X_{ij}$ is the value of the j-th feature for the i-th observation.
+- $\beta_j$ is the coefficient for the j-th feature.
+- $\epsilon_i$ is the true error. It represents the part of the data that the model cannot explain. This is often referred to as the random error or noise in the data.
+
+We will have loss:
+
+$$
+loss = \sum\_{i=1}^n r_i^2 = \sum\_{i=1}^n (y_i-\hat{y_i})^2 = \sum\_{i=1}^n (y_i - \sum_{j=1}^p X_{ij}\beta_j)^2
+$$
+
+and correspondingly, objective function:
+
+$$
+\underset{\beta}{\min} \ \frac{1}{2n} \sum_{i=1}^n (y_i - \sum_{j=1}^p X_{ij}\beta_j)^2 + \lambda \sum_{j=1}^p |\beta_j|
+$$
+
+In this case we scale by n in order to remove the dependency on the size of the dataset.
+
+##### Connecting Back
+
+How does lasso regression help with multicollinearity, feature selection and interpretability? The penalty shrinks less important coefficients to exactly zero. For highly correlated features, Lasso tends to select one feature and discard others (setting their coefficients to zero). Lasso also reduces beta coefficients to 0, effectively removing redundant features and noise in the data. Of course, since there are fewer features understanding how independent variables correlate to our target will be easier, making our model more interpretable.
 
 ## Tree Architectures
 
@@ -339,7 +374,7 @@ This stablizes our inversion, helping with predictors being highly correlated. A
 
 # Adding Temporal Dependencies using Deterministic Processes
 
-### Linear Regression
+## Linear Regression
 
 For some models, like linear regression and decision trees, they are not able to understand temporal dependencies naturally. This is inherent to the way they work. Lets go over why they dont work.
 
@@ -352,7 +387,7 @@ $$
 
 This does not account for the ordering of the data, as it fails the i.i.d assumption. Linear regressors cannot model this time dependent relationship between past outputs and future outputs unless we explicitly state them!
 
-### Decision Trees  
+###Decision Trees  
 
 Tree-based models (e.g., Decision Trees, Random Forests, XGBoost) split the data into regions by evaluating individual features independently. Trees make decisions by comparing features' values at each split. They do not consider sequential relationships between rows or recognize time as a continuous flow.
 
