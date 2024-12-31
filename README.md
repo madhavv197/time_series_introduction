@@ -1,27 +1,5 @@
-# Introduction To Time Series: A comprehensive guide to time series in machine learning
+# Introduction To Time Series: A comprehensive introduction to time series in machine learning
 ![Banner](assets/banner_time_series.png)
-
-# Table of Contents
-
-- [Fundamental Step: Time Indexing](#fundamental-step-time-indexing)
-  - [MultiIndexing in Pandas](#multiindexing-in-pandas)
-    - [Before Time Indexing](#before-time-indexing)
-    - [After Time Indexing](#after-time-indexing)
-- [Model Architectures (1)](#model-architectures-1)
-  - [Linear Regression](#linear-regression)
-    - [Regularization](#regularization)
-      - [Ridge (L2)](#ridge-l2)
-      - [Lasso (L1)](#lasso-l1)
-- [Adding Temporal Dependencies using Deterministic Processes](#adding-temporal-dependencies-using-deterministic-processes)
-  - [Linear Regression](#linear-regression-1)
-  - [Decision Trees](#decision-trees)
-  - [Deterministic Processes](#deterministic-processes)
-    - [Introducing Seasonality](#introducing-seasonality)
-      - [One Hot Encoding](#one-hot-encoding)
-      - [Fourier Calendar Terms](#fourier-calendar-terms)
-- [Algorithm Complexity Note](#algorithm-complexity-note)
-  - [Linear Regression](#linear-regression-2)
-  - [XGBoost](#xgboost)
 
 # Fundamental Step: Time Indexing
 
@@ -523,23 +501,41 @@ $$
 
 ### Basic Decision Tree
 
+Sorting each feaature take O($NlogN$). For $p$ features, sorting takes O($pNlogN$). 
+
+For $p$ features, evaluating splits takes O($pN$).
+
+Since the dataset reduces the tree depth will have  O($logN$).
+
+Our total cost will then be:
+
+$$
+O(pN(logN)^2)
+$$
+
+
+
 ### Random Forest
+
+For a random forest, this will be the same as a single decision tree, times $B$ number of trees.
+
+Our total cost will then be:
+
+$$
+O(BpN(logN)^2)
+$$
 
 ### XGBoost
 
-XGBoost's time complexity is given by:
+For N samples the gradient and hessian are calculated, taking O($N$). 
+
+Finding splits will be O($pN$) for all features $p$ per node, and for a tree of depth $d$, the numbers of nodes is $2^d$. The total cost per tree will then be O($pN2^d$).
+
+Finally our cost will be multiplied by the number of trees we have, $T$:
 
 $$
-\text{complexity} = O(K \cdot d \cdot T \cdot n)
+O(TpN2^d)
 $$
-
-Where :
-- **K**: Number of estimators/trees
-- **d**: Maximum depth per tree
-- **T**: Number of non-zero rows
-- **n**: Total number of train rows
-
-For each node, for each feature, the algorithm finds the optimal split point by finding maximum gain. This does this for all n train rows. It may use some sorting feature in order to speed up the process. This is applied for K trees each with depth 5.
 
 
 # Adding Temporal Dependencies using Deterministic Processes
