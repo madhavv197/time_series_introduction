@@ -105,10 +105,26 @@ where:
 The goal is to minimize the Residual Sum of Squares (RSS):
 
 $$
-RSS = (Y - X\beta)^T (Y - X\beta)
+RSS = (Y - X\beta)^T (Y - X\beta) = Y^TY - Y^T(X\beta) - (X\beta)^TY + (X\beta)^T(X\beta)
+$$
+
+which simplifies to:
+
+$$
+RSS = Y^TY - 2(X\beta)^TY + B^TB(X^TX)
 $$
 
 Taking the derivative of RSS with respect to $\beta$ and setting it to zero gives:
+
+$$
+\frac{Y^TY}{\partial \beta} = 0
+$$
+$$
+\frac{2(X\beta)^TY}{\partial \beta} = 2X^TY
+$$
+$$
+\frac{B^TB(X^TX)}{\partial \beta} = 2(X^TX)\beta
+$$
 
 $$
 \frac{\partial RSS}{\partial \beta} = -2X^T (Y - X\beta) = 0 
@@ -369,7 +385,11 @@ How does lasso regression help with multicollinearity, feature selection and int
 
 ## Tree Architectures
 
-### 
+### Basic Decision Trees
+
+A decision tree partitions or splits the feature space into regions and predicts a constant value for each region. For regression this constant is the mean of the target variable in the chosen region.
+
+Lets say we begin with some dataset $D = \{(x_i, y_i)\}_{i=1}^N$ where $x_i$ is a feature vector and $y_i$ is the target value. Taking the example of house prices, for a dataset with features $[\text{size, bedrooms, location, year built}]$, a single row of $x_i$ would be $[2000,3,\text{suburb},1995]$. The target value $y_i$ in this case would be the price of the house $[500000]$.
 
 
 # Adding Temporal Dependencies using Deterministic Processes
