@@ -495,9 +495,29 @@ So now that we know all this information lets put it all together:
   
 # Algorithm Complexity Note
 
-Lets analyse the complexity of the models we have just seen. 
+Lets analyse the train complexity of the models we have just seen. 
 
 ## Linear Regression
+
+Linear regressions solves:
+
+$$
+\hat{\beta} = \left( X^T X \right)^{-1} X^T y
+$$
+
+Where X is an $Nxp$ feature matrix.
+
+The matrix multiplication of $X^TX$ will have complexity O($Np^2$), for each pair of columns in X we compute the dot product across N samples.
+
+The matrix inversion will have complexity O($p^3$), using standard algorithms lke gaussian elimination.
+
+Finally the multiplication $X^TY$ will have complexity O($np$), as we multiply each of the p rows over N samples.
+
+Our final complexity will be:
+
+$$
+O(Np^2+p^3)
+$$
 
 ## Trees
 
