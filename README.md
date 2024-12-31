@@ -406,7 +406,7 @@ where:
 The question now is, how does the model decide which splits to evaluate? The  model, for each feature $x_j$, evaluates all feasible split points, called thresholds $t$. These thresholds are finite, determined based on the unique values of $x_j$. Lets take an example of $x_j = [100,200,300,400]$. The candidate thresholds are the midpoints between consecutive unique values in the sorted list:
 
 $$
-t \in \lbrace{\frac{100+200}{2}, \frac{200+300}{2}, \frac{300+400}{2}}\rbrace = \lbrace{150, 250, 350\}/rbrace
+t \in \lbrace{\frac{100+200}{2}, \frac{200+300}{2}, \frac{300+400}{2}}\rbrace = \lbrace{150, 250, 350\}\rbrace
 $$
 
 For each threshold $t$ the algorithm evaluates the split by dividing the data into two groups:
@@ -425,16 +425,87 @@ The stop this splitting process when one of the following scenarios occours:
 
 ### Random Forests
 
+A random forest is an ensemble of decision trees, where each tree is built independently on a random subset of the data and features. The final prediction is made by aggregating the predictions of all trees. In the case of regression, the final prediction is the average of the predictions from all trees. For classification the final prediction is the majority vote.
 
+In order to introduce diversity among the trees, each tree in the random forest is trained on a bootstrap sample of the dataset. What this means is that some instances of the dataset may appear multiple times while other may not appear at all. It creates $N$ instances with replacement from the original dataset.
 
+To introduce further diversity, each tree does not consider all features of the input matrix $x_i$, instead only a random subset of $m$ features is chosen, where $m < p$ where $p$ is the total amount of features. 
 
+The mathematical notation for the ensemble is given by:
+
+$$
+\hat{y}(x) = \frac{1}{B} \sum_{b=1}^B \hat{y}_b(x)
+$$
+
+for regression, and 
+
+$$
+\hat{y}(x) = \text{mode}(\lbrace{\hat{y}_1(x), \hat{y}_2(x), ... , \hat{y}_B(x)}\rbrace)
+$$
+
+for classification.
+
+### XGBoost
+
+Unlike bagging (random forests), boosting builds trees sequentially, each one correcting the errors of the previous trees using gradient-based optimization. 
+
+XGBoost minimizes a regularized objective function:
+
+$$
+\text{Loss} = \sum_{i=1}^N \ell(y_i, \hat{y}\_i) + \sum_{k=1}^K \Omega(f_k)
+$$
+
+where:
+
+- $\ell(y_i, \hat{y}\_i)$ is our loss function, which for regression could be a MSE, or MAE. In classification this would be a log loss.
+- $\Omega(f_k)$ is the regularization term used in XGboost. It is given by:
+
+$$
+\Omega(f_k)  = \gamma T + \frac{\lambda}{2} \sum_{j=1}^T w_j^2
+$$
+
+Minimizing this loss function directly is complex and computationally expensive, especially when loss is non-linear, for example in the case of classifcation when we use a log-loss. To simplify this problem, we use a second-order taylor approximation to approximate the loss function locally around the current predictions $\hat{y}_i^{(t-1)}$. We then get for a small change $f_t(x)$, the taylor expansion of $\ell(y_i, \hat{y}_i^{(t)})$ around $\hat{y}_i^{(t-1)}$ is:
+
+$$
+f(x) \approx f(a) + f'(a)(x - a) + \frac{f''(a)}{2}(x - a)^2
+$$
+
+$$
+\ell(y_i, \hat{y}_i^{(t)}) \approx \ell(y_i, \hat{y}_i^{(t-1)}) + g_i f_t(x_i) + \frac{1}{2} h_i f_t(x_i)^2
+$$
+
+where:
+- $g_i = \frac{\partial \ell(y_i, \hat{y}_i)}{\partial \hat{y}_i}$ is the gradient which measures how the loss changes with $\hat{y}_i$.
+- $h_i = \frac{\partial^2 \ell(y_i, \hat{y}_i)}{\partial \hat{y}_i^2}$ is the hessian which measures how the gradient itself changes.
+
+The information gain for XGBoost is given by:
+
+$$
+\text{Gain} = \frac{1}{2} \left[ \frac{G_L^2}{H\_L + \lambda} + \frac{G_R^2}{H_R + \lambda} - \frac{(G_L + G_R)^2}{H_L + H_R + \lambda} \right] - \gamma
+$$
+
+So now that we know all this information lets put it all together: 
+
+- At iteration $t-1$ the model predicts $\hat{y}_i^{(t-1)}$.
+- It calculates gradients and hessians $g_i$, and $h_i$, for each data point based on the current predictions.
+- The new tree $f_t(x)$ is trained to predict $g_i$, reducing the residual error, by learning how to correct the model's current errors.
+- For each candidate split, we compute the gain using $G_L, G_R, H_L, H_R$ to find the best split.
+- Adjust leaf weights in order to adjust predictions.
+- Repeat for the desired number of iterations.
+  
 # Algorithm Complexity Note
 
-Lets take a moment to analyse the complexity of our models. 
+Lets analyse the complexity of the models we have just seen. 
 
 ## Linear Regression
 
-## XGBoost
+## Trees
+
+### Basic Decision Tree
+
+### Random Forest
+
+### XGBoost
 
 XGBoost's time complexity is given by:
 
