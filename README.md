@@ -391,6 +391,65 @@ A decision tree partitions or splits the feature space into regions and predicts
 
 Lets say we begin with some dataset $D = \{(x_i, y_i)\}_{i=1}^N$ where $x_i$ is a feature vector and $y_i$ is the target value. Taking the example of house prices, for a dataset with features $[\text{size, bedrooms, location, year built}]$, a single row of $x_i$ would be $[2000,3,\text{suburb},1995]$. The target value $y_i$ in this case would be the price of the house $[500000]$.
 
+For regression, decision  trees use a weighted average of variances in order to find the optimal split. The weightage accounts for the size of splits. If one subset is very large compared to the other, it prevents small subsets from disproportionately affecting the evaluation of each split. This is given by:
+
+$$
+\text{Weighted Variance} = \frac{|D_L|}{D}\sigma^2(D_L) + \frac{|D_R|}{D}\sigma^2(D_R)
+$$
+
+where:
+
+- $|D_L|$, $|D_R|$ is the number of samples in the left and right subset respectively.
+- $|D|$ is the total number of samples in the parent node.
+- $\sigma^2(D_L)$, $\sigma^2(D_R)$ is the variance of target values in the left and right subset respectively.
+
+The question now is, how does the model decide which splits to evaluate? The  model, for each feature $x_j$, evaluates all feasible split points, called thresholds $t$. These thresholds are finite, determined based on the unique values of $x_j$. Lets take an example of $x_j = [100,200,300,400]$. The candidate thresholds are the midpoints between consecutive unique values in the sorted list:
+
+$$
+t \in \lbrace{\frac{100+200}{2}, \frac{200+300}{2}, \frac{300+400}{2}}\rbrace = \lbrace{150, 250, 350\}/rbrace
+$$
+
+For each threshold $t$ the algorithm evaluates the split by dividing the data into two groups:
+
+ - $D_L = \lbrace{(x_i,y_i | x_{ij} < t}\rbrace$
+ - $D_R = \lbrace{(x_i,y_i | x_{ij} \geq t}\rbrace$
+
+For continous values, this is chosen discretely.
+
+The stop this splitting process when one of the following scenarios occours:
+
+- All target values are identical: If all target values are identical, the variance is by definition 0. Further splits cannot reduce it.
+- Node contains only one data point: A single datapoint has no variance by defenition
+- Thresholds Exhausted: If all possible splits for all features have been evaluated, and none result in a variance reduction.
+- Predefined Stopping Criteria: This could be that the tree reaches a maximum depth, defined by the user of minimum samples per leaf.
+
+### Random Forests
+
+
+
+
+# Algorithm Complexity Note
+
+Lets take a moment to analyse the complexity of our models. 
+
+## Linear Regression
+
+## XGBoost
+
+XGBoost's time complexity is given by:
+
+$$
+\text{complexity} = O(K \cdot d \cdot T \cdot n)
+$$
+
+Where :
+- **K**: Number of estimators/trees
+- **d**: Maximum depth per tree
+- **T**: Number of non-zero rows
+- **n**: Total number of train rows
+
+For each node, for each feature, the algorithm finds the optimal split point by finding maximum gain. This does this for all n train rows. It may use some sorting feature in order to speed up the process. This is applied for K trees each with depth 5.
+
 
 # Adding Temporal Dependencies using Deterministic Processes
 
@@ -407,13 +466,13 @@ $$
 
 This does not account for the ordering of the data, as it fails the i.i.d assumption. Linear regressors cannot model this time dependent relationship between past outputs and future outputs unless we explicitly state them!
 
-###Decision Trees  
+### Decision Trees  
 
-Tree-based models (e.g., Decision Trees, Random Forests, XGBoost) split the data into regions by evaluating individual features independently. Trees make decisions by comparing features' values at each split. They do not consider sequential relationships between rows or recognize time as a continuous flow.
+Trees make decisions by comparing features' values at each split. They do not consider sequential relationships between rows or recognize time as a continuous flow.
 
 Tree-based models view time simply as another feature (e.g., 1, 2, 3, ...), without understanding that the data is ordered in time. Trends (upward/downward slopes) or periodicities exist.
 
-When using deterministic processes, ensure that any order greater than 1 is strictly used for in sample modelling, otherwise we get exploding predictions. At times we may use this for some applications but the scope must be limited, and analysis rigorous.
+When using deterministic processes, ensure that any order greater than 1 is strictly used for in sample modelling, otherwise we get exploding predictions.
 
 ## Deterministic Processes
 
@@ -464,25 +523,3 @@ Fourier Calendar Terms represent seasonality using smooth sinusoidal functions (
 
 Fourier terms approximate patterns as smooth waves because sine and cosine functions are continuous. They do not model sharp or abrupt changes.
 
-# Algorithm Complexity Note
-
-Lets take a moment to analyse the complexity of our models. 
-
-## Linear Regression
-
-
-## XGBoost
-
-XGBoost's time complexity is given by:
-
-$$
-\text{complexity} = O(K \cdot d \cdot T \cdot n)
-$$
-
-Where :
-- **K**: Number of estimators/trees
-- **d**: Maximum depth per tree
-- **T**: Number of non-zero rows
-- **n**: Total number of train rows
-
-For each node, for each feature, the algorithm finds the optimal split point by finding maximum gain. This does this for all n train rows. It may use some sorting feature in order to speed up the process. This is applied for K trees each with depth 5.
