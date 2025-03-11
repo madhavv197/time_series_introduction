@@ -1,4 +1,4 @@
-# Introduction To Time Series: A comprehensive introduction to time series in machine learning
+# Time series understanding for myself
 ![Banner](assets/banner_time_series.png)
 
 # Fundamental Step: Time Indexing
